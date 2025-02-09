@@ -5,7 +5,7 @@ export function createForm(containerId, onSubmit) {
         return;
     }
 
-    container.innerHTML = "";
+    container.textContent = ""; 
     const form = document.createElement("form");
     form.style.padding = "20px";
     form.style.borderRadius = "10px";
@@ -26,6 +26,14 @@ export function createForm(containerId, onSubmit) {
         return input;
     }
 
+    function sanitizeInput(value) {
+        return value
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#x27;");
+    }
+
     const emailInput = createInput("email", "email", "Enter your email");
     const usernameInput = createInput("text", "username", "Enter your username");
     const passwordInput = createInput("password", "password", "Enter your password");
@@ -44,9 +52,9 @@ export function createForm(containerId, onSubmit) {
     form.onsubmit = (event) => {
         event.preventDefault();
         const formData = {
-            email: emailInput.value,
-            username: usernameInput.value,
-            password: passwordInput.value,
+            email: sanitizeInput(emailInput.value),
+            username: sanitizeInput(usernameInput.value),
+            password: sanitizeInput(passwordInput.value),
         };
         onSubmit(formData);
         emailInput.value = "";
